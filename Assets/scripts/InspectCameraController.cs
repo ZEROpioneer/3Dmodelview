@@ -1,17 +1,18 @@
 using UnityEngine;
 
+// 相机控制类
 public class InspectCameraController : MonoBehaviour
 {
     [Header("旋转目标与参数")]
-    public Transform targetModel;
-    public float rotateSpeed = 2f;
-    public float minVerticalAngle = -60f;
-    public float maxVerticalAngle = 60f;
+    public Transform targetModel;  // 要围绕旋转的目标模型
+    public float rotateSpeed = 2f;  // 旋转速度 
+    public float minVerticalAngle = -60f;  // 最小垂直旋转角度
+    public float maxVerticalAngle = 60f;  // 最大垂直旋转角度
 
     [Header("缩放参数")]
-    public float zoomSpeed = 0.5f;
-    public float minZoomDistance = 1f;
-    public float maxZoomDistance = 10f;
+    public float zoomSpeed = 2f;  // 缩放速度
+    public float minZoomDistance = 1f;  // 最小缩放距离
+    public float maxZoomDistance = 10f;  // 最大缩放距离
 
     // 以下为触摸屏相关参数（目前仅作为备用）
     // [Header("触屏参数")]
@@ -20,10 +21,10 @@ public class InspectCameraController : MonoBehaviour
     // [Tooltip("触屏缩放灵敏度（比鼠标高一些，建议0.8-1.2）")]
     // public float touchZoomSensitivity = 1f;
 
-    private Vector3 offset;
-    private float xRot;
-    private float yRot;
-    private float currentDistance;
+    private Vector3 offset;  // 相机与目标的初始偏移量
+    private float xRot;  // X轴旋转角度
+    private float yRot;  // Y轴旋转角度
+    private float currentDistance;  // 当前相机与目标距离
 
     // 以下为触摸屏相关变量（目前仅作为备用）
     // private float previousTouchDistance; // 上一帧双指距离
@@ -31,18 +32,30 @@ public class InspectCameraController : MonoBehaviour
 
     void Start()
     {
+        // 检查是否设置了 目标模型
         if (targetModel == null)
         {
             Debug.LogError("请设置targetModel（要围绕旋转的模型）");
-            enabled = false;
+            enabled = false;  // 禁用脚本
             return;
         }
 
-        offset = transform.position - targetModel.position;
-        currentDistance = offset.magnitude;
+        offset = transform.position - targetModel.position;  // 计算初始偏移量
+        currentDistance = offset.magnitude;  // 初始化当前距离
         currentDistance = Mathf.Clamp(currentDistance, minZoomDistance, maxZoomDistance);
+        /*
+         * Mathf.Clamp(输入值，最小值，最大值)
+         *如果输入值小于最小值，则返回最小值
+         *如果输入值大于最大值，则返回最大值
+         *如果输入值在最小值和最大值之间，则返回输入值本身
+         */
 
         Vector3 angles = transform.eulerAngles;
+        /*
+         * 在游戏开发（尤其是 Unity 引擎）中，Vector3 angles = transform.eulerAngles;
+         * 这行代码的作用是获取当前游戏对象（transform 组件所属的对象）的旋转角度，
+         * 并用欧拉角（Euler Angles）的形式存储在 Vector3 类型的变量 angles 中。
+         */
         xRot = angles.y;
         yRot = angles.x;
         if (yRot > 180) yRot -= 360;
@@ -68,7 +81,7 @@ public class InspectCameraController : MonoBehaviour
         {
             xRot += Input.GetAxis("Mouse X") * rotateSpeed;
             yRot -= Input.GetAxis("Mouse Y") * rotateSpeed;
-            yRot = Mathf.Clamp(yRot, minVerticalAngle, maxVerticalAngle);
+            yRot = Mathf.Clamp(yRot, minVerticalAngle, maxVerticalAngle);  // 控制y轴旋转角度
         }
 
         // 鼠标滚轮缩放
@@ -78,6 +91,18 @@ public class InspectCameraController : MonoBehaviour
             currentDistance -= scroll * zoomSpeed;
             currentDistance = Mathf.Clamp(currentDistance, minZoomDistance, maxZoomDistance);
         }
+        /*
+         * 它是 Unity 内部已经配置好的输入轴标识，对应鼠标滚轮的滚动动作
+         * 当你滚动鼠标滚轮时，Input.GetAxis("Mouse ScrollWheel") 会返回一个浮点值：
+         * 向前滚动（远离自己）时，返回正值（通常是 0.1 左右，取决于设置）
+         * 向后滚动（靠近自己）时，返回负值（通常是 -0.1 左右）
+         * 不滚动时，返回 0
+         * 这个名称是固定的约定，必须严格按照 "Mouse ScrollWheel" 拼写才能正确获取鼠标滚轮输入。
+         * 如果修改这个字符串（比如写成 "mousewheel" 或其他形式），Unity 就无法识别，会返回 0。
+         * 类似的预定义输入轴还有：
+         * "Horizontal" 和 "Vertical"：对应键盘方向键或 WASD 键
+         * "Mouse X" 和 "Mouse Y"：对应鼠标在水平和垂直方向的移动
+         */
     }
 
     /// <summary>
@@ -149,9 +174,9 @@ public class InspectCameraController : MonoBehaviour
 
     private void UpdateCameraPosition()
     {
-        Quaternion rotation = Quaternion.Euler(yRot, xRot, 0);
-        Vector3 newOffset = rotation * (offset.normalized * currentDistance);
-        transform.position = targetModel.position + newOffset;
-        transform.LookAt(targetModel.position);
+        Quaternion rotation = Quaternion.Euler(yRot, xRot, 0);  // 根据yRot和xRot创建旋转四元数
+        Vector3 newOffset = rotation * (offset.normalized * currentDistance);  // 计算新的偏移量：将标准化的初始偏移量乘以当前距离，再应用旋转
+        transform.position = targetModel.position + newOffset;  // 设置相机位置为目标模型位置加上新的偏移量
+        transform.LookAt(targetModel.position);  // 让相机始终看向目标模型的位置
     }
 }
