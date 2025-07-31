@@ -403,6 +403,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &875571978 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7876438023623838493, guid: 3d0559fd349fdb841b82460e3c190f3f, type: 3}
+  m_PrefabInstance: {fileID: 90429090343483447}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &945244306 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 90429091011866789, guid: 3d0559fd349fdb841b82460e3c190f3f, type: 3}
@@ -611,6 +616,8 @@ MonoBehaviour:
   totalDurationText: {fileID: 109749488}
   progressSlider: {fileID: 709088305}
   volumeSlider: {fileID: 945244306}
+  volumeSliderPanel: {fileID: 875571978}
+  loopToggle: {fileID: 1906738357}
 --- !u!4 &1389301111
 Transform:
   m_ObjectHideFlags: 0
@@ -1019,6 +1026,17 @@ MonoBehaviour:
   zoomSpeed: 2
   minZoomDistance: 1
   maxZoomDistance: 10
+--- !u!114 &1906738357 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9047534811341192804, guid: 3d0559fd349fdb841b82460e3c190f3f, type: 3}
+  m_PrefabInstance: {fileID: 90429090343483447}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1924242250 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 90429090053055357, guid: 3d0559fd349fdb841b82460e3c190f3f, type: 3}
@@ -1050,6 +1068,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 90429089723945500, guid: 3d0559fd349fdb841b82460e3c190f3f, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 90429089776759443, guid: 3d0559fd349fdb841b82460e3c190f3f, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 90429089982318422, guid: 3d0559fd349fdb841b82460e3c190f3f, type: 3}
