@@ -24,9 +24,11 @@ public class VideoPlayerUIController : MonoBehaviour
     /// </summary>
     public RawImage videoRawImage;
     /// <summary>
-    /// 播放/暂停按钮
+    /// 播放/暂停按钮 及对应图标
     /// </summary>
     public Button pauseButton;
+    public Sprite pauseIsSprite;     // 视频开启图标
+    public Sprite pauseNotSprite;    // 视频暂停图标
     /// <summary>
     /// 切换功能按钮（预留功能）
     /// </summary>
@@ -35,6 +37,8 @@ public class VideoPlayerUIController : MonoBehaviour
     /// 静音/取消静音按钮
     /// </summary>
     public Button volumeButton;
+    public Sprite volumeOnSprite;     // 音量开启图标
+    public Sprite volumeOffSprite;    // 音量关闭图标
     /// <summary>
     /// 显示当前播放时间的文本
     /// </summary>
@@ -85,7 +89,23 @@ public class VideoPlayerUIController : MonoBehaviour
     {
         // 初始化视频：开始预加载视频，准备完成后触发OnVideoPrepared方法
         videoPlayer.Prepare();
+        /*
+         * videoPlayer.Prepare();
+         * 作用：开始异步加载视频资源（包括视频画面和关联的音频数据）。
+         * 特点：
+         * 这是一个异步操作，不会阻塞主线程（游戏仍能正常运行）。
+         * 视频较大时，加载需要一定时间（取决于视频大小和设备性能）。
+         * 调用后，VideoPlayer 会进入 "准备中" 状态，此时还不能播放视
+         */
         videoPlayer.prepareCompleted += OnVideoPrepared;
+        /*
+         * videoPlayer.prepareCompleted += OnVideoPrepared;
+         * 作用：注册一个 "准备完成" 的回调函数（事件监听）。
+         * 细节说明：
+         * prepareCompleted 是 VideoPlayer 的一个事件（类似 "通知"），当视频加载完成并可以播放时会自动触发。
+         * += OnVideoPrepared 表示：当 prepareCompleted 事件触发时，执行 OnVideoPrepared 这个方法。
+         * 这是一种 "异步回调" 模式，确保视频加载完成后才执行后续操作（如开始播放、更新 UI 等）。
+         */
 
         // 绑定按钮点击事件
         pauseButton.onClick.AddListener(TogglePlayPause);      // 播放/暂停按钮
@@ -144,7 +164,7 @@ public class VideoPlayerUIController : MonoBehaviour
     /// </summary>
     private void TogglePlayPause()
     {
-        if (videoPlayer.isPlaying)
+        if (videoPlayer.isPlaying)  // 判断当前视频播放状态
         {
             // 当前正在播放：暂停视频和音频
             videoPlayer.Pause();
