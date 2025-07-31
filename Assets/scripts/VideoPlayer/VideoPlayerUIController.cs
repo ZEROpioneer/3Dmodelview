@@ -103,6 +103,11 @@ public class VideoPlayerUIController : MonoBehaviour, IPointerEnterHandler, IPoi
         // 初始化视频：开始预加载视频，准备完成后触发OnVideoPrepared方法
         videoPlayer.Prepare();
         videoPlayer.prepareCompleted += OnVideoPrepared;
+        // 新增：绑定视频播放结束事件
+        videoPlayer.loopPointReached += OnVideoEnded;  // 视频播放完毕时触发
+        
+        // 新增：初始化时同步循环开关状态（关键修复）
+        videoPlayer.isLooping = loopToggle.isOn;  // 让视频播放器初始就遵循开关状态
 
         // 绑定按钮点击事件
         pauseButton.onClick.AddListener(TogglePlayPause);      // 播放/暂停按钮
@@ -365,7 +370,19 @@ public class VideoPlayerUIController : MonoBehaviour, IPointerEnterHandler, IPoi
 
         Debug.Log($"循环播放状态已切换为：{isLoop}");
     }
-
+    
+    /// <summary>
+    /// 视频播放到结尾时触发
+    /// </summary>
+    private void OnVideoEnded(VideoPlayer source)
+    {
+        // 如果循环开关开启，强制从头播放（兼容部分Unity版本的循环bug）
+        if (loopToggle.isOn)
+        {
+            videoPlayer.time = 0;
+            videoPlayer.Play();
+        }
+    }
     /// <summary>
     /// 鼠标进入音量按钮时触发
     /// </summary>
